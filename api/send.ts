@@ -110,6 +110,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const clientConfirmationPromise = resend.emails.send({
       from: 'Articulus <contact@mail.articulus.space>',
       to: [email.trim()],
+      replyTo: 'articulus.tech@gmail.com',
       subject: 'Inquiry Received — Articulus',
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 580px; margin: 0 auto; background: #0a0a0c; color: #ededed; border: 1px solid #1e2229; border-radius: 12px; overflow: hidden; padding: 32px 36px;">
@@ -131,7 +132,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           </div>
 
           <p style="font-size: 13px; line-height: 1.6; color: #64748b; margin: 0 0 28px 0;">
-            If you have any supplementary materials, wireframes, or API specifications, simply reply directly to this email.
+            If you have any supplementary materials, wireframes, or API specifications, simply reply directly to this email or reach us at <a href="mailto:articulus.tech@gmail.com" style="color: #38bdf8; text-decoration: none;">articulus.tech@gmail.com</a>.
           </p>
 
           <div style="border-top: 1px solid #1a1e26; padding-top: 20px; font-size: 12px; color: #475569;">
