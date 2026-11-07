@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { supabase, isSupabaseConfigured } from '../utils/supabase'
 
 interface FormData {
   name: string
@@ -80,6 +81,30 @@ export const ContactForm: React.FC = () => {
       const contactApiUrl = import.meta.env.VITE_CONTACT_API_URL
       const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || 'contact@articulus.tech'
 
+      // Persist to Supabase if configured
+      if (isSupabaseConfigured) {
+        try {
+          const { error: dbError } = await supabase.from('inquiries').insert([
+            {
+              name: formData.name,
+              email: formData.email,
+              company: formData.company || null,
+              service: formData.service,
+              details: formData.details,
+              created_at: new Date().toISOString(),
+            },
+          ])
+
+          if (dbError) {
+            console.warn('[Supabase Insert Notice]', dbError.message)
+          } else {
+            console.info('[Supabase Insert Success] Inquiry stored in database.')
+          }
+        } catch (dbErr) {
+          console.warn('[Supabase Connection Notice]', dbErr)
+        }
+      }
+
       if (contactApiUrl && contactApiUrl.trim() !== '') {
         const response = await fetch(contactApiUrl, {
           method: 'POST',
@@ -98,7 +123,7 @@ export const ContactForm: React.FC = () => {
         }
       } else {
         // Safe development simulation fallback
-        await new Promise((resolve) => setTimeout(resolve, 600))
+        await new Promise((resolve) => setTimeout(resolve, 500))
         console.info('[Articulus Inquiry Received]', {
           to: contactEmail,
           data: formData,
