@@ -25,3 +25,4 @@ create policy "Allow authenticated select"
   for select
   to authenticated
   using (true);
+
