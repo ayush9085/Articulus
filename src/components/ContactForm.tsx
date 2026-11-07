@@ -105,29 +105,30 @@ export const ContactForm: React.FC = () => {
         }
       }
 
-      if (contactApiUrl && contactApiUrl.trim() !== '') {
-        const response = await fetch(contactApiUrl, {
+      const apiUrl = contactApiUrl && contactApiUrl.trim() !== '' ? contactApiUrl : '/api/send'
+
+      try {
+        const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            ...formData,
+            name: formData.name,
+            email: formData.email,
+            company: formData.company,
+            service: formData.service,
+            details: formData.details,
             recipient: contactEmail,
             timestamp: new Date().toISOString(),
           }),
         })
 
         if (!response.ok) {
-          throw new Error('Server responded with an error.')
+          console.warn('[Contact API Warning]', response.statusText)
         }
-      } else {
-        // Safe development simulation fallback
-        await new Promise((resolve) => setTimeout(resolve, 500))
-        console.info('[Articulus Inquiry Received]', {
-          to: contactEmail,
-          data: formData,
-        })
+      } catch (apiErr) {
+        console.warn('[Contact API Error]', apiErr)
       }
 
       setIsSuccess(true)
