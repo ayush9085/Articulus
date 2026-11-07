@@ -13,3 +13,4 @@ export const isSupabaseConfigured = Boolean(
   supabaseKey &&
   supabaseUrl !== 'https://placeholder.supabase.co'
 )
+
